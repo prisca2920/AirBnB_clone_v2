@@ -39,7 +39,13 @@ class Place(BaseModel, Base):
     latitude = Column(Float, nullable=True)
     longitude = Column(Float, nullable=True)
     amenity_ids = []
-    if os.environ.get('HBNB_TYPE_STORAGE') == 'db':
+
+    reviews = relationship("Review",
+                           cascade="all, delete",
+                           backref="place"
+                           )
+
+    '''if os.environ.get('HBNB_TYPE_STORAGE') == 'db':
         reviews = relationship("Review",
                                backref="place",
                                cascade="all, delete"
@@ -55,3 +61,4 @@ class Place(BaseModel, Base):
                 if rev.places_id == self.id:
                     reviews.append(rev)
             return reviews
+    '''
