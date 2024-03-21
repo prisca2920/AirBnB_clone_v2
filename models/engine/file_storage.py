@@ -84,7 +84,7 @@ class FileStorage:
         #    del self.__objects[f"{type(obj).__name__}.{obj.id}"]
         #except Exception:
         #    pass
-        #if obj is not None:
-        #    key = "{}.{}".format(obj.__class__.__name__, obj.id)
-        #    if key in self.__objects:
-        #        del self.__objects[key]
+        if obj is not None:
+            key = "{}.{}".format(obj.__class__.__name__, obj.id)
+            if key in self.__objects:
+                del self.__objects[key]
