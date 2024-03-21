@@ -44,21 +44,3 @@ class Place(BaseModel, Base):
                            cascade="all, delete",
                            backref="place"
                            )
-
-    '''if os.environ.get('HBNB_TYPE_STORAGE') == 'db':
-        reviews = relationship("Review",
-                               backref="place",
-                               cascade="all, delete"
-                               )
-    else:
-        @property
-        def reviews(self):
-            """Returns the list of City instances"""
-            from models import storage, Review
-
-            reviews = []
-            for rev in storage.all(Review).values():
-                if rev.places_id == self.id:
-                    reviews.append(rev)
-            return reviews
-    '''
