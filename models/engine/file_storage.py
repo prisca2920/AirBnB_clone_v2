@@ -22,7 +22,14 @@ class FileStorage:
         Returns:
             dict: A dictionary containing models
         """
-        return FileStorage.__objects
+        if cls is None:
+            return FileStorage.__objects
+        else:
+            filtered_objs = {}
+            for key, val in FileStorage.__objects.items():
+                if isinstance(val, cls):
+                    filtered_objs[key] = val
+            return filtered_objs
 
     def new(self, obj):
         """Adds new object to storage dictionary.
@@ -73,7 +80,11 @@ class FileStorage:
             obj (BaseModel): The object to delete from the storage.
             Defaults to None
         """
-        try:
-            del self.__objects[f"{type(obj).__name__}.{obj.id}"]
-        except Exception:
-            pass
+        #try:
+        #    del self.__objects[f"{type(obj).__name__}.{obj.id}"]
+        #except Exception:
+        #    pass
+        #if obj is not None:
+        #    key = "{}.{}".format(obj.__class__.__name__, obj.id)
+        #    if key in self.__objects:
+        #        del self.__objects[key]
