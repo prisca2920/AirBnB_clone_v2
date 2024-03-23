@@ -1,9 +1,14 @@
 #!/usr/bin/python3
 """ Place Module for HBNB project """
 from models.base_model import BaseModel, Base
-from sqlalchemy import Column, ForeignKey, String, Integer, Float
+from sqlalchemy import Table, Column, ForeignKey
+from sqlalchemy import String, Integer, Float
 from sqlalchemy.orm import relationship
-import os
+from models.city import City
+from models.state import State
+from models.amenity import Amenity
+from models.user import User
+from models.review import Review
 
 
 class Place(BaseModel, Base):
@@ -26,7 +31,29 @@ class Place(BaseModel, Base):
             IDs associated with the place.
         reviews (relationship): Relationship to Review model,
             representing reviews for the place.
+        place_amenity(Table): Define association table
+            for many-to-many relationship
+        amenities(relationship): Establish many-to-many relationship
+            with Amenity
+
+        Methods:
+            -amenities(self): Defines getter for amenities attribute
+            -amenities(self, amenity): Defines setter for amenities
+                attribute
     """
+
+    place_amenity = Table('place_amenity', Base.metadata,
+                          Column('place_id',
+                                 String(60),
+                                 ForeignKey('places.id'),
+                                 primary_key=True,
+                                 nullable=False),
+                          Column('amenity_id',
+                                 String(60),
+                                 ForeignKey('amenities.id'),
+                                 primary_key=True,
+                                 nullable=False)
+                          )
     __tablename__ = "places"
     city_id = Column(String(60), ForeignKey("cities.id"), nullable=False)
     user_id = Column(String(60), ForeignKey("users.id"), nullable=False)
@@ -44,3 +71,18 @@ class Place(BaseModel, Base):
                            cascade="all, delete",
                            backref="place"
                            )
+    amenities = relationship("Amenity",
+                             secondary=place_amenity,
+                             viewonly=False
+                             )
+
+    @property
+    def amenities(self):
+        """Getter for amenities attribute"""
+        return [amenity.id for amenity in self.amenities]
+
+    @amenities.setter
+    def amenities(self, amenity):
+        """Setter for amenities attribute"""
+        if isinstance(amenity, Amenity):
+            self.amenities.append(amenity.id)
